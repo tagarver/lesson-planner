@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from db import init_db, add_student, get_students, save_plan
 from pdf_generator import generate_student_pdf
-from poster.py import generate_weekly_poster
+from poster import generate_weekly_poster
 from pathlib import Path
 
 # Init DB
