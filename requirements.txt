@@ -1,5 +1,7 @@
+# requirements.txt (corrected)
 streamlit
 pandas
 reportlab
-sqlite3
-pillow
+matplotlib
+openpyxl
+Pillow
