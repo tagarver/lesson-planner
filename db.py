@@ -1,4 +1,4 @@
-# db.py (updated)
+# db.py (fixed)
 import sqlite3
 from pathlib import Path
 
@@ -61,17 +61,25 @@ def get_students():
 def get_plans(week=None, student_id=None, subject=None):
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
-    query = "SELECT * FROM plans WHERE 1=1"
+    
+    # Build query dynamically based on provided filters
+    query = "SELECT * FROM plans"
+    conditions = []
     params = []
+    
     if week:
-        query += " AND week=?"
+        conditions.append("week = ?")
         params.append(week)
     if student_id:
-        query += " AND student_id=?"
+        conditions.append("student_id = ?")
         params.append(student_id)
     if subject:
-        query += " AND subject=?"
+        conditions.append("subject = ?")
         params.append(subject)
+    
+    if conditions:
+        query += " WHERE " + " AND ".join(conditions)
+    
     c.execute(query, params)
     rows = c.fetchall()
     conn.close()
