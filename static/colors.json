@@ -1,5 +1,8 @@
 {
-  "title": "#002366",   // deep blue for headers
-  "text": "#000000",    // black for body text
-  "activity": "#CC0000" // red for activity highlights
+  "title": "#002366",
+  "text": "#000000", 
+  "activity": "#CC0000",
+  "background": "#F0F8FF",
+  "header": "#4682B4",
+  "accent": "#FFD700"
 }
