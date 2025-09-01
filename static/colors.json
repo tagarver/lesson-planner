@@ -1,5 +1,5 @@
 {
-  "title": "#003366",
-  "text": "#000000",
-  "activity": "#0066CC"
+  "title": "#002366",   // deep blue for headers
+  "text": "#000000",    // black for body text
+  "activity": "#CC0000" // red for activity highlights
 }
