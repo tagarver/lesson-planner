@@ -78,9 +78,13 @@ def get_plans(week=None, student_id=None, subject=None):
 
 def get_next_lesson(student_id, subject, lessons_df):
     plans = get_plans(student_id=student_id, subject=subject)
-    mastered = [p[4] for p in plans if p[6] == "Mastered"]  # lesson_id where mastered
-    all_lessons = lessons_df['Lesson_ID'].tolist()  # sequential
+    mastered = [p[4] for p in plans if p[6] == "Mastered"]
+    all_lessons = lessons_df['Lesson_ID'].tolist()
     for lesson in all_lessons:
         if lesson not in mastered:
             return lesson
-    return all_lessons[0]  # Cycle to first if all mastered
+    return all_lessons[0]  # Cycle back for review
+
+def has_plans_for_week(week):
+    plans = get_plans(week=week)
+    return len(plans) > 0
