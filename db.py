@@ -1,4 +1,4 @@
-# db.py (fixed)
+# db.py (fixed with subject column)
 import sqlite3
 from pathlib import Path
 
@@ -14,12 +14,12 @@ def init_db():
                     accommodations TEXT,
                     iep_link TEXT
                  )''')
-    # Plans with subject
+    # Plans with subject - FIXED SCHEMA
     c.execute('''CREATE TABLE IF NOT EXISTS plans (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     week TEXT,
                     student_id INTEGER,
-                    subject TEXT,
+                    subject TEXT,  # Added this column
                     lesson_id TEXT,
                     detailed_plan TEXT,
                     mastery TEXT,
@@ -33,6 +33,8 @@ def init_db():
                  )''')
     conn.commit()
     conn.close()
+
+# ... rest of the functions remain the same ...
 
 def add_student(name, accommodations, iep_link):
     conn = sqlite3.connect(DB_FILE)

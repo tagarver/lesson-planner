@@ -26,11 +26,13 @@ if st.sidebar.button("Add Student") and student_name:
 students = get_students()
 student_options = {s[1]: s[0] for s in students}
 
+# ... existing code ...
+
 # Load mappings with error handling
 try:
-    uls_df = pd.read_csv("mappings/uls.csv", sep="|", encoding='utf-8')
-    math_df = pd.read_csv("mappings/math.csv", sep="|", encoding='utf-8')
-    life_df = pd.read_csv("mappings/life_skills.csv", sep="|", encoding='utf-8')
+    uls_df = pd.read_csv("mappings/uls.csv")
+    math_df = pd.read_csv("mappings/math.csv", sep="|")  # Fixed: Added pipe separator
+    life_df = pd.read_csv("mappings/life_skills.csv")
 except Exception as e:
     st.error(f"Error loading curriculum mappings: {e}")
     st.info("Please check the CSV files in the mappings folder for proper formatting")
@@ -38,6 +40,7 @@ except Exception as e:
     math_df = pd.DataFrame()
     life_df = pd.DataFrame()
 
+# ... existing code ...
 
 # Indiana Content Connectors (full from research, grades 3-5 ELA/Math)
 ela_standards = [

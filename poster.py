@@ -1,4 +1,4 @@
-# poster.py (updated with error handling)
+# poster.py (updated with better error handling)
 from PIL import Image, ImageDraw, ImageFont
 from db import get_plans, get_students
 from pathlib import Path
@@ -19,14 +19,20 @@ def generate_weekly_poster(week):
         "accent": "#FFD700"
     }
     
+    colors = default_colors  # Default to fallback colors
+    
     # Try to load colors from JSON, fall back to defaults if error
     try:
-        colors = json.load(open(STATIC_FOLDER / "colors.json"))
+        colors_path = STATIC_FOLDER / "colors.json"
+        if colors_path.exists():
+            colors = json.load(open(colors_path))
     except (FileNotFoundError, json.JSONDecodeError):
-        colors = default_colors
+        pass  # Use default colors if there's an error
     
     img = Image.new('RGB', (800, 1100), color=colors.get("background", "#FFFFFF"))
     draw = ImageDraw.Draw(img)
+    
+    # ... rest of the function remains the same ...
     
     # Try to load a larger font if available
     try:
