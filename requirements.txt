@@ -1,6 +1,5 @@
 streamlit
 pandas
 reportlab
-sqlite-utils
-matplotlib
-openpyxl
+sqlite3
+pillow

@@ -13,13 +13,14 @@ def init_db():
                     accommodations TEXT,
                     iep_link TEXT
                  )''')
-    # Weekly plans
+    # Plans with subject
     c.execute('''CREATE TABLE IF NOT EXISTS plans (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     week TEXT,
                     student_id INTEGER,
-                    lesson TEXT,
-                    activity TEXT,
+                    subject TEXT,
+                    lesson_id TEXT,
+                    detailed_plan TEXT,
                     mastery TEXT,
                     FOREIGN KEY(student_id) REFERENCES students(id)
                  )''')
@@ -40,11 +41,11 @@ def add_student(name, accommodations, iep_link):
     conn.commit()
     conn.close()
 
-def save_plan(week, student_id, lesson, activity, mastery):
+def save_plan(week, student_id, subject, lesson_id, detailed_plan, mastery):
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
-    c.execute("INSERT INTO plans (week, student_id, lesson, activity, mastery) VALUES (?, ?, ?, ?, ?)",
-              (week, student_id, lesson, activity, mastery))
+    c.execute("INSERT INTO plans (week, student_id, subject, lesson_id, detailed_plan, mastery) VALUES (?, ?, ?, ?, ?, ?)",
+              (week, student_id, subject, lesson_id, detailed_plan, mastery))
     conn.commit()
     conn.close()
 
@@ -56,7 +57,7 @@ def get_students():
     conn.close()
     return rows
 
-def get_plans(week=None, student_id=None):
+def get_plans(week=None, student_id=None, subject=None):
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
     query = "SELECT * FROM plans WHERE 1=1"
@@ -67,7 +68,19 @@ def get_plans(week=None, student_id=None):
     if student_id:
         query += " AND student_id=?"
         params.append(student_id)
+    if subject:
+        query += " AND subject=?"
+        params.append(subject)
     c.execute(query, params)
     rows = c.fetchall()
     conn.close()
     return rows
+
+def get_next_lesson(student_id, subject, lessons_df):
+    plans = get_plans(student_id=student_id, subject=subject)
+    mastered = [p[4] for p in plans if p[6] == "Mastered"]  # lesson_id where mastered
+    all_lessons = lessons_df['Lesson_ID'].tolist()  # sequential
+    for lesson in all_lessons:
+        if lesson not in mastered:
+            return lesson
+    return all_lessons[0]  # Cycle to first if all mastered

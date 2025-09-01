@@ -1,4 +1,4 @@
-import matplotlib.pyplot as plt
+from PIL import Image, ImageDraw, ImageFont
 from db import get_plans, get_students
 from pathlib import Path
 import json
@@ -8,24 +8,34 @@ POSTER_FOLDER.mkdir(exist_ok=True)
 STATIC_FOLDER = Path("static")
 
 def generate_weekly_poster(week):
-    # Load color palette
     colors = json.load(open(STATIC_FOLDER / "colors.json"))
+    
+    img = Image.new('RGB', (800, 1100), color=(255, 255, 255))  # Tall poster
+    draw = ImageDraw.Draw(img)
+    font_title = ImageFont.truetype("arial.ttf", 28) if Path("arial.ttf").exists() else ImageFont.load_default()
+    font_text = ImageFont.truetype("arial.ttf", 18) if Path("arial.ttf").exists() else ImageFont.load_default()
+    font_activity = ImageFont.truetype("arial.ttf", 14) if Path("arial.ttf").exists() else ImageFont.load_default()
 
+    draw.text((20, 20), f"Weekly Learning Overview at Eastwood Elementary: {week}", fill=colors["title"], font=font_title)
+    
+    y = 80
     students = get_students()
     plans = get_plans(week=week)
-    
-    fig, ax = plt.subplots(figsize=(16,11))  # 11x17 poster
-    ax.axis("off")
-    ax.set_title(f"Weekly Learning Overview: {week}", fontsize=28, color=colors.get("title","black"))
-
-    y = 1.0
     for student in students:
-        ax.text(0.05, y, f"{student[1]}", fontsize=18, color=colors.get("text","black"), transform=fig.transFigure)
-        student_plans = [p for p in plans if p[2]==student[0]]
+        draw.text((20, y), f"{student[1]}", fill=colors["text"], font=font_text)
+        y += 30
+        student_plans = [p for p in plans if p[2] == student[0]]
         for plan in student_plans:
-            y -= 0.03
-            ax.text(0.1, y, f"{plan[3]}: {plan[4]}", fontsize=14, color=colors.get("activity","black"), transform=fig.transFigure)
-        y -= 0.05
+            draw.text((40, y), f"{plan[3]}: {plan[4]} (Mastery: {plan[6]})", fill=colors["activity"], font=font_activity)
+            y += 20
+        y += 20
+    
+    # Add logo
+    logo_path = STATIC_FOLDER / "logo.png"
+    if logo_path.exists():
+        logo = Image.open(logo_path).resize((150, 150))
+        img.paste(logo, (600, 900))
+
     poster_file = POSTER_FOLDER / f"weekly_poster_{week}.png"
-    plt.savefig(poster_file, bbox_inches='tight')
+    img.save(poster_file)
     return poster_file
