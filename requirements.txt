@@ -1,0 +1,6 @@
+streamlit
+pandas
+reportlab
+sqlite-utils
+matplotlib
+openpyxl
