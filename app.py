@@ -226,16 +226,22 @@ st.image(str(poster_file))
 with open(poster_file, "rb") as f:
     st.download_button("Download Parent Poster (Weekly Overview)", f.read(), file_name=poster_file.name)
 
+# app.py (updated historical tabs section)
 # Historical tabs
 tab1, tab2 = st.tabs(["Historical Plans", "Mastery Tracking"])
 with tab1:
-    df_plans = pd.DataFrame(get_plans(), columns=["ID", "Week", "Student ID", "Subject", "Lesson ID", "Detailed Plan", "Mastery"])
-    st.dataframe(df_plans)
+    all_plans = get_plans()
+    if all_plans:
+        df_plans = pd.DataFrame(all_plans, columns=["ID", "Week", "Student ID", "Subject", "Lesson ID", "Detailed Plan", "Mastery"])
+        st.dataframe(df_plans)
+    else:
+        st.info("No plans created yet.")
+
 with tab2:
     for subject in subjects:
         st.subheader(subject)
-        subj_plans = [p for p in get_plans(subject=subject)]
+        subj_plans = get_plans(subject=subject)
         if subj_plans:
             st.dataframe(pd.DataFrame(subj_plans, columns=["ID", "Week", "Student ID", "Subject", "Lesson ID", "Detailed Plan", "Mastery"]))
         else:
-            st.write("No plans yet.")
+            st.write("No plans yet for this subject.")
