@@ -31,7 +31,7 @@ student_options = {s[1]: s[0] for s in students}
 # Load mappings with error handling
 try:
     uls_df = pd.read_csv("mappings/uls.csv")
-    math_df = pd.read_csv("mappings/math.csv", sep="|")  # Fixed: Added pipe separator
+    math_df = pd.read_csv("mappings/math.csv", sep="|")  # Added pipe separator
     life_df = pd.read_csv("mappings/life_skills.csv")
 except Exception as e:
     st.error(f"Error loading curriculum mappings: {e}")
@@ -40,7 +40,7 @@ except Exception as e:
     math_df = pd.DataFrame()
     life_df = pd.DataFrame()
 
-# ... existing code ...
+# ... rest of the code ...
 
 # Indiana Content Connectors (full from research, grades 3-5 ELA/Math)
 ela_standards = [
@@ -229,12 +229,12 @@ st.image(str(poster_file))
 with open(poster_file, "rb") as f:
     st.download_button("Download Parent Poster (Weekly Overview)", f.read(), file_name=poster_file.name)
 
-# app.py (updated historical tabs section)
-# Historical tabs
-tab1, tab2 = st.tabs(["Historical Plans", "Mastery Tracking"])
+# ... in the historical tabs section ...
+
 with tab1:
     all_plans = get_plans()
     if all_plans:
+        # Updated column indices to match the new schema
         df_plans = pd.DataFrame(all_plans, columns=["ID", "Week", "Student ID", "Subject", "Lesson ID", "Detailed Plan", "Mastery"])
         st.dataframe(df_plans)
     else:
@@ -245,6 +245,7 @@ with tab2:
         st.subheader(subject)
         subj_plans = get_plans(subject=subject)
         if subj_plans:
+            # Updated column indices to match the new schema
             st.dataframe(pd.DataFrame(subj_plans, columns=["ID", "Week", "Student ID", "Subject", "Lesson ID", "Detailed Plan", "Mastery"]))
         else:
             st.write("No plans yet for this subject.")

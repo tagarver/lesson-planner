@@ -1,8 +1,8 @@
 {
-  "title": "#002366",
-  "text": "#000000", 
-  "activity": "#CC0000",
-  "background": "#F0F8FF",
-  "header": "#4682B4",
-  "accent": "#FFD700"
+    "title": "#002366",
+    "text": "#000000",
+    "activity": "#CC0000",
+    "background": "#FFFFFF",
+    "header": "#4682B4",
+    "accent": "#FFD700"
 }

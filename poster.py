@@ -1,4 +1,3 @@
-# poster.py (updated with better error handling)
 from PIL import Image, ImageDraw, ImageFont
 from db import get_plans, get_students
 from pathlib import Path
@@ -25,14 +24,14 @@ def generate_weekly_poster(week):
     try:
         colors_path = STATIC_FOLDER / "colors.json"
         if colors_path.exists():
-            colors = json.load(open(colors_path))
-    except (FileNotFoundError, json.JSONDecodeError):
-        pass  # Use default colors if there's an error
+            with open(colors_path, 'r') as f:
+                colors = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        print(f"Error loading colors: {e}. Using default colors.")
+        # Use default colors if there's an error
     
     img = Image.new('RGB', (800, 1100), color=colors.get("background", "#FFFFFF"))
     draw = ImageDraw.Draw(img)
-    
-    # ... rest of the function remains the same ...
     
     # Try to load a larger font if available
     try:
@@ -81,7 +80,8 @@ def generate_weekly_poster(week):
         try:
             logo = Image.open(logo_path).resize((150, 150))
             img.paste(logo, (600, 900))
-        except:
+        except Exception as e:
+            print(f"Error loading logo: {e}")
             pass  # Skip logo if there's an error loading it
 
     poster_file = POSTER_FOLDER / f"weekly_poster_{week.replace(' ', '_')}.png"
